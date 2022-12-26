@@ -43,7 +43,7 @@ namespace ClothBazar.Services
             }
         }
 
-        public void DeleteCategory(int ID)
+        public void DeleteProduct(int ID)
         {
             using (var context = new CBContext())
             {

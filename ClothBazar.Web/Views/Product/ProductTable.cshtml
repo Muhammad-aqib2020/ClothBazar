@@ -31,8 +31,8 @@
                     <td></td>
                     <td>@product.Price</td>
                     <td>
-                        <button>Edit</button>
-                        <button>Delete</button>
+                        <button class="editButton" data-id="@product.ID">Edit</button>
+                        <button class="deleteButton" data-id="@product.ID">Delete</button>
                     </td>
                 </tr>
             }
@@ -41,6 +41,7 @@
     </div>
 
         <script>
+            //Search Button
             $("#searchBtn").click(function () {
                 var searchValue = $("#searchTxt").val();
 
@@ -53,10 +54,73 @@
                     .done(function (response) {
 
                         $("#tableContiner").html(response);
+                     
                     })
                     .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                         alert("Fail")
                     });
+            });
+                //New Button
+            $("#newBtn").click(function () {
+                $.ajax({
+                    url: '/Product/Create',
+                  
+                })
+                    .done(function (response) {
+
+                        $("#actionContiner").html(response);
+                      
+
+                    })
+                    .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("Fail")
+                    });
+            });
+            //Edit Button
+            $(".editButton").click(function () {
+                $.ajax({
+                    url: '/Product/Edit',
+                    data: {
+                        ID: $(this).attr('data-id')
+                    }
+                })
+                    .done(function (response) {
+
+                        $("#actionContiner").html(response);
+
+
+                    })
+                    .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("Fail")
+                    });
+            });
+
+            //Delete Button
+            $(".deleteButton").click(function () {
+
+                var confirmDelete = confirm("Are You Sure you want to Delete this Product!");
+
+                if (confirmDelete)
+                {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Product/Delete',
+                        data: {
+                            ID: $(this).attr('data-id')
+                        }
+                    })
+                        .done(function (response) {
+
+                            $("#tableContiner").html(response);
+                           
+
+                        })
+                        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                            alert("Fail")
+                        });
+                }
+
+               
             });
 
         </script>
