@@ -1,5 +1,6 @@
 ﻿using ClothBazar.Entities;
 using ClothBazar.Services;
+using ClothBazar.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,12 +31,24 @@ namespace ClothBazar.Web.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            return PartialView();
+            CategoriesServices categoriesServices = new CategoriesServices();
+
+            var categories = categoriesServices.GetCategories();
+            return PartialView(categories);
         }
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(NewCategoryViewModel model)
         {
-            productservice.SaveProduct(product);
+            CategoriesServices categoriesServices = new CategoriesServices();
+            var newProduct = new Product();
+
+            newProduct.Name = model.Name;
+            newProduct.Description = model.Description;
+            newProduct.Price = model.Price;
+          //  newProduct.CategoryID = model.CategoryID;
+            newProduct.Category = categoriesServices.GetCategory(model.CategoryID);
+
+            productservice.SaveProduct(newProduct);
 
             return RedirectToAction("ProductTable");
         }
@@ -47,9 +60,18 @@ namespace ClothBazar.Web.Controllers
             return PartialView(product);
         }
         [HttpPost]
-        public ActionResult Edit(Product product)
+        public ActionResult Edit(NewCategoryViewModel model)
         {
-            productservice.UpdateProduct(product);
+            CategoriesServices categoriesServices = new CategoriesServices();
+            var upProduct = new Product();
+
+            upProduct.Name = model.Name;
+            upProduct.Description = model.Description;
+            upProduct.Price = model.Price;
+            //  newProduct.CategoryID = model.CategoryID;
+            upProduct.Category = categoriesServices.GetCategory(model.CategoryID);
+
+            productservice.UpdateProduct(upProduct);
 
             return RedirectToAction("ProductTable");
         }

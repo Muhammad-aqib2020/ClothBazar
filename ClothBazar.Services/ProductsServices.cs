@@ -20,16 +20,20 @@ namespace ClothBazar.Services
 
         public List<Product> GetProducts()
         {
-            using(var context=new CBContext())
-            {
-                return context.Products.ToList();
-            }
+
+            var context = new CBContext();
+            return context.Products.ToList();
+            //using(var context=new CBContext())
+            //{
+            //    return context.Products.ToList();
+            //}
         }
 
         public void SaveProduct(Product product)
         {
             using (var context = new CBContext())
             {
+                context.Entry(product.Category).State = System.Data.Entity.EntityState.Unchanged;
                 context.Products.Add(product);
                 context.SaveChanges();
             }
