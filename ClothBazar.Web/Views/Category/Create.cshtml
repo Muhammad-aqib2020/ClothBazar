@@ -12,21 +12,22 @@
     <input name="Description" />
     <br />
     <label>Image</label>
-    <input id="ImageUrl"  name="ImageUrl" type="hidden"/>
-    <input id="ImageUpload" type="file" name="Image" accept=".png,.jpg" />
+    <input id="ImageURL" name="ImageURL" type="hidden" />
+    <input id="imageUpload" name="Image" type="file" accept=".png, .jpg" />
     <br />
     <div class="thumb">
-        <img id="categoryImage" alt="Image">
-      
+        <img id="categoryImage" />
+        
     </div>
-
-
+    <label>Is Featured?</label>
+    <input  name="IsFeatured" type="radio" value="True"/> True
+    <input  name="IsFeatured" type="radio" value="False" /> False
 
     <button type="submit">Submit</button>
 </form>
 <script>
-    $("#ImageUpload").change(function () {
-    
+    $("#imageUpload").change(function () {
+       
         var element = this;
         var formData = new FormData();
 
@@ -47,12 +48,13 @@
 
             })
                 .done(function (response) {
-
-                    console.log(response);
+                    console.log(response)
+                  
                     if (response.Success)
                     {
+                        $("#ImageURL").val(response.ImageURL);
                         $("#categoryImage").attr("src", response.ImageURL);
-                        $("#ImageUrl").val(response.ImageURL);
+                  
                     }
                 })
                 .fail(function (XMLHttpRequest, textStatus, errorThrown) {
