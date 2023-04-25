@@ -2,6 +2,7 @@
 using ClothBazar.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,10 +15,16 @@ namespace ClothBazar.Services
         {
             using (var context = new CBContext())
             {
-                return context.Products.Find(ID);
+                return context.Products.Where(x => x.ID == ID).Include(x => x.Category).FirstOrDefault();
             }
         }
-
+        public List<Product> GetProducts(List<int> IDs)
+        {
+            using (var context = new CBContext())
+            {
+                return context.Products.Where(product => IDs.Contains(product.ID)).ToList();
+            }
+        }
         public List<Product> GetProducts()
         {
 

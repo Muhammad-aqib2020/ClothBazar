@@ -67,6 +67,7 @@
                     <td>
                         <button class="editButton" data-id="@product.ID">Edit</button>
                         <button class="deleteButton" data-id="@product.ID">Delete</button>
+                        <button class="add-to-cart" data-id="@product.ID">Add to Cart</button>
                     </td>
                 </tr>
             }
@@ -131,30 +132,79 @@
 
             //Delete Button
             $(".deleteButton").click(function () {
+                swal({
+                    title: "Confirm?",
+                    text: "Are You Sure you want to Delete this Product!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
 
-                var confirmDelete = confirm("Are You Sure you want to Delete this Product!");
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Product/Delete',
+                                data: {
+                                    ID: $(this).attr('data-id')
+                                }
+                            })
+                                .done(function (response) {
 
-                if (confirmDelete)
-                {
-                    $.ajax({
-                        type: 'POST',
-                        url: '/Product/Delete',
-                        data: {
-                            ID: $(this).attr('data-id')
+                                    $("#tableContiner").html(response);
+
+
+                                    swal("Record Deleted Successfully", {
+                                        icon: "success",
+                                    });
+
+                                })
+                                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                                    alert("Fail")
+                                });
+
+
+
                         }
-                    })
-                        .done(function (response) {
+                        //else {
+                        //    swal("Your imaginary file is safe!");
+                        //}
+                    });
 
-                            $("#tableContiner").html(response);
+                //var confirmDelete = confirm("Are You Sure you want to Delete this Product!");
+
+                //if (confirmDelete)
+                //{
+                //    $.ajax({
+                //        type: 'POST',
+                //        url: '/Product/Delete',
+                //        data: {
+                //            ID: $(this).attr('data-id')
+                //        }
+                //    })
+                //        .done(function (response) {
+
+                //            $("#tableContiner").html(response);
                            
 
-                        })
-                        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                            alert("Fail")
-                        });
-                }
+                //        })
+                //        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                //            alert("Fail")
+                //        });
+                //}
 
                
+            });
+            var products = [];
+            //Cart Button
+            $(".add-to-cart").click(function () {
+
+                var productId = $(this).attr('data-id')
+
+                products.push(productId)
+
+                $.cookie('CartProducts', products.join('-'), { path:'/' });
+             
             });
 
         </script>
