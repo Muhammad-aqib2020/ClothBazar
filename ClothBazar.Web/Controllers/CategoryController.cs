@@ -66,5 +66,16 @@ namespace ClothBazar.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public ActionResult CategoryTable(string search)
+        {
+            var products = categoryservice.GetCategories();
+            if (!string.IsNullOrEmpty(search))
+            {
+                products = products.Where(p => p.Name != null && p.Name.Contains(search.ToLower())).ToList();
+            }
+
+            return PartialView(products);
+        }
     }
 }

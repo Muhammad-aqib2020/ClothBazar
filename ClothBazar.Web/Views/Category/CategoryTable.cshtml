@@ -1,0 +1,76 @@
+﻿
+@{
+    ViewBag.Title = "CategoryTable";
+}
+
+<div>
+    <form method="post" action="/Category/CategoryTable">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+
+                    <label>Search</label>
+                    <input class="form-control" id="searchTxt" name="Search" />
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Action</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn btn-primary form-control" type="button" id="searchBtn">Search</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-primary form-control" type="button" id="newBtn">New</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+<h2>CategoryTable</h2>
+
+
+<div id="tableContiner">
+
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>Category Name</td>
+                <td>Category</td>
+                <td>Price</td>
+                <td>Actions</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>
+
+                        @if (product.Category != null)
+                        {
+                            <Text>@product.Category.Name</Text>
+                        }
+                        else
+                        {
+                            <Text>-</Text>
+                        }
+                    </td>
+                    <td>@product.Price</td>
+                    <td>
+                        <button class="editButton" data-id="@product.ID">Edit</button>
+                        <button class="deleteButton" data-id="@product.ID">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

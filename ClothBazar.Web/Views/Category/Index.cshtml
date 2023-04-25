@@ -5,7 +5,21 @@
 
 <h2>Index</h2>
 
-@foreach(var categoty in Model)
+@*@foreach(var categoty in Model)
             {
 <h1>@categoty.Name</h1>
-            }
+            }*@
+
+
+<div class="container">
+    <div id="tableContiner">
+        @{
+            Html.RenderAction("ProductTable");
+            // Html.RenderAction("Create");
+        }
+    </div>
+    <hr />
+    <div id="actionContiner">
+
+    </div>
+</div>
