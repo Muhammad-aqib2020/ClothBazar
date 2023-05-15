@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationsServices.cs" />
     <Compile Include="ProductsServices.cs" />
     <Compile Include="CategoriesServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,20 +1,12 @@
-﻿@model List<ClothBazar.Entities.Category>
+﻿
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-
-@*@foreach(var categoty in Model)
-            {
-<h1>@categoty.Name</h1>
-            }*@
-
-
 <div class="container">
     <div id="tableContiner">
         @{
-            Html.RenderAction("ProductTable");
+            Html.RenderAction("CategoryTable");
             // Html.RenderAction("Create");
         }
     </div>

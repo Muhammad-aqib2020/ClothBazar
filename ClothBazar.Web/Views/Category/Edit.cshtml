@@ -6,7 +6,7 @@
     var falsechecked = !Model.IsFeatured ? "checked" : string.Empty;
 }
 <h2>Edit Category</h2>
-<form method="post">
+<form id="editCategory" method="post">
     <input type="hidden" name="ID" value="@Model.ID" />
     <label>Name</label>
     <input name="Name" value="@Model.Name" />
@@ -18,5 +18,31 @@
     <input name="IsFeatured" type="radio" value="True" @truechecked /> True
     <input name="IsFeatured" type="radio" value="False" @falsechecked /> False
     <br />
-    <button type="submit">Submit</button>
+    <button id="updateBtn" type="button">Submit</button>
 </form>
+
+<script>
+
+
+    //Search Button
+    $("#updateBtn").click(function () {
+
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Edit","Category")',
+            data: $("#editCategory").serialize()
+
+        })
+            .done(function (response) {
+
+                $("#tableContiner").html(response);
+                $("#actionContiner").html("");
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Fail")
+            });
+    });
+
+
+</script>

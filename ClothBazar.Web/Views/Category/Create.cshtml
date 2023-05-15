@@ -1,10 +1,10 @@
-﻿@model ClothBazar.Entities.Category
+﻿@model  List<Category>
 @{
     ViewBag.Title = "Create";
 }
 
 <h2>Create Category</h2>
-<form method="post">
+<form id="createCategory" method="post">
     <div class="row">
         <div class="col-md-4">
             <label>Name</label>
@@ -25,46 +25,68 @@
             <input class="form-control" name="IsFeatured" type="radio" value="True" /> True
             <input class="form-control" name="IsFeatured" type="radio" value="False" /> False
 
-            <button type="submit">Submit</button>
+
         </div>
     </div>
-
+    <button class="btn btn-primary" id="saveBtn" type="button">Submit</button>
 </form>
 <script>
     $("#imageUpload").change(function () {
-       
+
         var element = this;
         var formData = new FormData();
 
         var totalFiles = element.files.length;
 
-        for (var i = 0; i < totalFiles; i++)
-    {
+        for (var i = 0; i < totalFiles; i++) {
             var file = element.files[i];
             formData.append("Photo", file);
         }
+        $.ajax({
+            type: 'POST',
+            url: '/Shared/UploadImage',
+            data: formData,
+            dataType: 'json',
+            contentType: false,
+            processData: false
+
+        })
+            .done(function (response) {
+                console.log(response)
+
+                if (response.Success) {
+                    $("#ImageURL").val(response.ImageURL);
+                    $("#categoryImage").attr("src", response.ImageURL);
+
+                }
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Fail")
+            });
+    });
+
+
+
+            //Save Button
+        $("#saveBtn").click(function () {
+
+            console.log('id="saveBtn"')
             $.ajax({
                 type: 'POST',
-                url: '/Shared/UploadImage',
-                data: formData,
-                dataType: 'json',
-                contentType: false,
-                processData: false
+                url: '@Url.Action("Create", "Category")',
+                data: $("#createCategory").serialize()
 
             })
                 .done(function (response) {
-                    console.log(response)
-                  
-                    if (response.Success)
-                    {
-                        $("#ImageURL").val(response.ImageURL);
-                        $("#categoryImage").attr("src", response.ImageURL);
-                  
-                    }
+
+                    $("#tableContiner").html(response);
+                    $("#actionContiner").html("");
+
                 })
                 .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                     alert("Fail")
                 });
-        });
- 
+            });
+
+
 </script>

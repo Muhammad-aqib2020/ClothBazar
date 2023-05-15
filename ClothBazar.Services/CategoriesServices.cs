@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace ClothBazar.Services
 {
    public class CategoriesServices
@@ -20,7 +21,8 @@ namespace ClothBazar.Services
 
         public List<Category> GetCategories()
         {
-            using(var context=new CBContext())
+            
+            using (var context=new CBContext())
             {
                 return context.categories.ToList();
             }
