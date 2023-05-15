@@ -1,5 +1,6 @@
 ﻿using ClothBazar.Entities;
 using ClothBazar.Services;
+using ClothBazar.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,55 @@ namespace ClothBazar.Web.Controllers
     public class CategoryController : Controller
     {
         CategoriesServices categoryservice = new CategoriesServices();
+        public ActionResult CategoryTable(string search)
+        {
 
+            NewCategoryViewModel NMC = new NewCategoryViewModel();
+       
+            ProductsServices productservice = new ProductsServices();
+            CategoriesServices categoriesServices = new CategoriesServices();
+            var productdata = productservice.GetProducts();
+            var categorydata = categoryservice.GetCategories();
+
+
+
+            var category = (from c in categorydata
+                            join p in productdata
+                    on c.ID equals p.CategoryID into ps
+                            from data in ps.DefaultIfEmpty()
+                            select new CategoryViewModel
+                            {
+                                ID = c.ID,
+                                Name = c.Name,
+                                Description = c.Description,
+                                Price = data == null ? 0 : data.Price,
+                            }).ToList();
+
+
+
+
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                categorydata = categorydata.Where(p => p.Name != null && p.Name.Contains(search)).ToList();
+
+                category = (from p in productdata
+                            join c in categorydata
+                               on p.CategoryID equals c.ID into ps
+                            from c in ps.DefaultIfEmpty()
+                            select new CategoryViewModel
+                            {
+                                ID = c.ID,
+                                Name = c.Name,
+                                Description = c.Description,
+                                Price = p.Price,
+                            }).ToList();
+
+
+            }
+            NMC.CategoryViewModels = category.ToList();
+            return PartialView(NMC.CategoryViewModels);
+        }
         [HttpGet]
         public ActionResult Index()
         {
@@ -19,34 +68,62 @@ namespace ClothBazar.Web.Controllers
 
             return View(categories);
         }
-        // GET: Category
-        [HttpGet]
+       // GET: Category
+       [HttpGet]
         public ActionResult Create()
         {
-            return View();
+            CategoriesServices categoriesServices = new CategoriesServices();
+
+            var categories = categoriesServices.GetCategories();
+            return PartialView(categories);
         }
+
+
         [HttpPost]
-        public ActionResult Create(Category category)
+        public ActionResult Create(Category category)     
         {
-            categoryservice.SaveCategory(category);
+            var newCategory = new Category();
 
-            return RedirectToAction("Index");
+            newCategory.Name = category.Name;
+            newCategory.Description = category.Description;
+            newCategory.ImageURL = category.ImageURL;
+            newCategory.IsFeatured = category.IsFeatured;
+
+            categoryservice.SaveCategory(newCategory);
+
+ 
+            return RedirectToAction("CategoryTable");
         }
+        //[HttpPost]
+        //public ActionResult Create(NewCategoryViewModel model)
+        //{
+        //    CategoriesServices categoriesServices = new CategoriesServices();
+        //    var newProduct = new Product();
 
+        //    newProduct.Name = model.Name;
+        //    newProduct.Description = model.Description;
+        //    newProduct.Price = model.Price;
+        //    //  newProduct.CategoryID = model.CategoryID;
+        //    newProduct.Category = categoriesServices.GetCategory(model.CategoryID);
+
+        //    productservice.SaveProduct(newProduct);
+
+        //    return RedirectToAction("ProductTable");
+        //}
         // GET: Category
         [HttpGet]
         public ActionResult Edit(int ID)
         {
             var category = categoryservice.GetCategory(ID);
-
-            return View(category);
+            return PartialView(category);
+        
         }
         [HttpPost]
         public ActionResult Edit(Category category)
         {
            categoryservice.UpdateCategory(category);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("CategoryTable");
         }
 
         // GET: Category
@@ -55,27 +132,19 @@ namespace ClothBazar.Web.Controllers
         {
             var category = categoryservice.GetCategory(ID);
 
-            return View(category);
+            //return View(category);
+            return RedirectToAction("CategoryTable");
         }
         [HttpPost]
         public ActionResult Delete(Category category)
         {
-           
+
 
             categoryservice.DeleteCategory(category.ID);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("CategoryTable");
         }
 
-        public ActionResult CategoryTable(string search)
-        {
-            var products = categoryservice.GetCategories();
-            if (!string.IsNullOrEmpty(search))
-            {
-                products = products.Where(p => p.Name != null && p.Name.Contains(search.ToLower())).ToList();
-            }
-
-            return PartialView(products);
-        }
+    
     }
 }
