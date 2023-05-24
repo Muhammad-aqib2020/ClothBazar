@@ -10,6 +10,18 @@ namespace ClothBazar.Services
 {
    public class ConfigurationsServices
     {
+        //public static ConfigurationsServices ClassObject { 
+        //    get {
+        //        if (privateinmemoryobj == null) privateinmemoryobj = new ConfigurationsServices();
+
+        //        return privateinmemoryobj;
+        //    }
+        //}
+        //private static ConfigurationsServices privateinmemoryobj { get; set; }
+        //private ConfigurationsServices()
+        //{
+           
+        //}
         public Config GetConfig (string Key)
         {
             using(var context = new CBContext())

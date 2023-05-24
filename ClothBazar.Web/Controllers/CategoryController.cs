@@ -12,14 +12,15 @@ namespace ClothBazar.Web.Controllers
     public class CategoryController : Controller
     {
         CategoriesServices categoryservice = new CategoriesServices();
-        public ActionResult CategoryTable(string search)
+        public ActionResult CategoryTable(string search, int? pageNo)
         {
+            pageNo = pageNo.HasValue ? pageNo : 1;
 
             NewCategoryViewModel NMC = new NewCategoryViewModel();
        
-            ProductsServices productservice = new ProductsServices();
+            //ProductsServices productservice = new ProductsServices();
             CategoriesServices categoriesServices = new CategoriesServices();
-            var productdata = productservice.GetProducts();
+            var productdata = ProductsServices.Instance.GetProducts(pageNo.Value);
             var categorydata = categoryservice.GetCategories();
 
 

@@ -8,6 +8,7 @@ namespace ClothBazar.Web.ViewModels
 {
     public class NewCategoryViewModel 
     {
+     
         public string Name { get; set; }
         public string Description { get; set; }
         public Decimal Price { get; set; }
