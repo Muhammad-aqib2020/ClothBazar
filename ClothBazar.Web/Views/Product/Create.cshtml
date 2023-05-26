@@ -5,7 +5,7 @@
 
 
 <h2>Create Product</h2>
-<form  id="createProduct"  method="post">
+<form id="createProduct" method="post">
     <div class="form-group">
         <label>Category</label>
         <select class="form-control" name="CategoryID">
@@ -33,56 +33,84 @@
         <input class="form-control" name="Price" />
 
     </div>
+    <label>Image</label>
+    <input class="form-control" id="ImageURL" name="ImageURL" type="hidden" />
+    <input class="form-control" id="imageUpload" name="Image" type="file" accept=".png, .jpg" />
+    <br />
+    <div class="thumb">
+        <img id="categoryImage" />
 
-    
+    </div>
+
 
     <button class="btn btn-primary" id="saveBtn" type="button">Save</button>
+    <button class="btn btn-primary" id="cancelBtn" type="button">Cancel</button>
 </form>
-@*<form id="createProduct" method="post">
-    <label>Category</label>
-    <select name="CategoryID">
-        @foreach (var category in Model)
-        {
-            <option value="@category.ID">@category.Name</option>
-        }
 
-    </select>
-    <br />
-
-    <label>Name</label>
-    <input name="Name" />
-    <br />
-    <label>Description</label>
-    <input name="Description" />
-    <br />
-    <label>Price</label>
-    <input name="Price" />
-    <button id="saveBtn" type="button">Save</button>
-</form>*@
 
 
 <script>
 
+     $("#imageUpload").change(function () {
 
+        var element = this;
+        var formData = new FormData();
+
+        var totalFiles = element.files.length;
+
+        for (var i = 0; i < totalFiles; i++) {
+            var file = element.files[i];
+            formData.append("Photo", file);
+        }
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("UploadImage", "Shared")',
+            data: formData,
+            dataType: 'json',
+            contentType: false,
+            processData: false
+
+        })
+            .done(function (response) {
+                console.log(response)
+
+                if (response.Success) {
+                    $("#ImageURL").val(response.ImageURL);
+                    $("#categoryImage").attr("src", response.ImageURL);
+
+                }
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Fail")
+            });
+    });
             //Save Button
                  $("#saveBtn").click(function () {
-         
+
 
                      $.ajax({
-                         type:'POST',
-                    url: '/Product/Create',
-                    data: $("#createProduct").serialize()
+                         type: 'POST',
+                         url:'@Url.Action("Create", "Product")',
+                         data: $("#createProduct").serialize()
 
                 })
                     .done(function (response) {
 
                         $("#tableContiner").html(response);
                         $("#actionContiner").html("");
+                        focusAction("actionContiner");
                     })
                     .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                         alert("Fail")
                     });
-            });
-          
+                 });
+
+
+    $("#cancelBtn").click(function () {
+
+        $("#actionContiner").html("");
+
+        focusAction("tableContiner");
+    });
 
 </script>

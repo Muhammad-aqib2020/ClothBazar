@@ -11,6 +11,22 @@ namespace ClothBazar.Services
 {
    public class CategoriesServices
     {
+        #region Singleton
+        public static CategoriesServices Instance
+        {
+            get
+            {
+                if (instance == null) instance = new CategoriesServices();
+                
+                return instance;
+            }
+        }
+        private static CategoriesServices instance { get; set; }
+        private CategoriesServices()
+        {
+
+        }
+        #endregion
         public Category GetCategory(int ID)
         {
             using (var context = new CBContext())

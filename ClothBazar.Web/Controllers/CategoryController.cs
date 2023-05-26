@@ -11,7 +11,7 @@ namespace ClothBazar.Web.Controllers
 {
     public class CategoryController : Controller
     {
-        CategoriesServices categoryservice = new CategoriesServices();
+ 
         public ActionResult CategoryTable(string search, int? pageNo)
         {
             pageNo = pageNo.HasValue ? pageNo : 1;
@@ -19,9 +19,9 @@ namespace ClothBazar.Web.Controllers
             NewCategoryViewModel NMC = new NewCategoryViewModel();
        
             //ProductsServices productservice = new ProductsServices();
-            CategoriesServices categoriesServices = new CategoriesServices();
+           
             var productdata = ProductsServices.Instance.GetProducts(pageNo.Value);
-            var categorydata = categoryservice.GetCategories();
+            var categorydata = CategoriesServices.Instance.GetCategories();
 
 
 
@@ -34,6 +34,7 @@ namespace ClothBazar.Web.Controllers
                                 ID = c.ID,
                                 Name = c.Name,
                                 Description = c.Description,
+                                ImageURL = c.ImageURL,
                                 Price = data == null ? 0 : data.Price,
                             }).ToList();
 
@@ -65,7 +66,7 @@ namespace ClothBazar.Web.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-          var categories=  categoryservice.GetCategories();
+          var categories= CategoriesServices.Instance.GetCategories();
 
             return View(categories);
         }
@@ -73,9 +74,9 @@ namespace ClothBazar.Web.Controllers
        [HttpGet]
         public ActionResult Create()
         {
-            CategoriesServices categoriesServices = new CategoriesServices();
+          
 
-            var categories = categoriesServices.GetCategories();
+            var categories = CategoriesServices.Instance.GetCategories();
             return PartialView(categories);
         }
 
@@ -90,7 +91,7 @@ namespace ClothBazar.Web.Controllers
             newCategory.ImageURL = category.ImageURL;
             newCategory.IsFeatured = category.IsFeatured;
 
-            categoryservice.SaveCategory(newCategory);
+            CategoriesServices.Instance.SaveCategory(newCategory);
 
  
             return RedirectToAction("CategoryTable");
@@ -115,14 +116,14 @@ namespace ClothBazar.Web.Controllers
         [HttpGet]
         public ActionResult Edit(int ID)
         {
-            var category = categoryservice.GetCategory(ID);
+            var category = CategoriesServices.Instance.GetCategory(ID);
             return PartialView(category);
         
         }
         [HttpPost]
         public ActionResult Edit(Category category)
         {
-           categoryservice.UpdateCategory(category);
+            CategoriesServices.Instance.UpdateCategory(category);
 
             return RedirectToAction("CategoryTable");
         }
@@ -131,7 +132,7 @@ namespace ClothBazar.Web.Controllers
         [HttpGet]
         public ActionResult Delete(int ID)
         {
-            var category = categoryservice.GetCategory(ID);
+            var category = CategoriesServices.Instance.GetCategory(ID);
 
             //return View(category);
             return RedirectToAction("CategoryTable");
@@ -141,7 +142,7 @@ namespace ClothBazar.Web.Controllers
         {
 
 
-            categoryservice.DeleteCategory(category.ID);
+            CategoriesServices.Instance.DeleteCategory(category.ID);
 
             return RedirectToAction("CategoryTable");
         }

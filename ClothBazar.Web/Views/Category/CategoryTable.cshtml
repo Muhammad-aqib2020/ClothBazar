@@ -18,12 +18,16 @@
                 <div class="form-group">
                     <label>Action</label>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4 pr-0">
                             <button class="btn btn-primary form-control" type="button" id="searchBtn">Search</button>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4 pr-0">
+                            <button class="btn btn-primary form-control" type="button" id="resetBtn">Reset</button>
+                        </div>
+                        <div class="col-md-4 pr-0">
                             <button class="btn btn-primary form-control" type="button" id="newBtn">New</button>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -45,6 +49,7 @@
                 <td>Category Name</td>
                 <td>Description</td>
                 <td>Price</td>
+                <td>Image</td>
                 <td>Actions</td>
             </tr>
         </thead>
@@ -64,6 +69,12 @@
                         {
                             <Text>-</Text>
                         }
+                    </td>
+                    <td>
+                        <div class="thumb">
+                            <img id="categoryImage" src="@product.ImageURL" width="50" height="50"/>
+
+                        </div>
                     </td>
                     <td>@product.Price</td>
                     <td>
@@ -97,6 +108,25 @@
                         alert("Fail")
                     });
             });
+     //Reset Button
+    $("#resetBtn").click(function () {
+        var searchValue = ''
+
+        $.ajax({
+            url: '@Url.Action("CategoryTable", "Category")',
+            data: {
+                search: searchValue
+            }
+        })
+            .done(function (response) {
+
+                $("#tableContiner").html(response);
+
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Fail")
+            });
+    });
                 //New Button
              $("#newBtn").click(function () {
 
@@ -106,7 +136,7 @@
                     .done(function (response) {
 
                         $("#actionContiner").html(response);
-
+                        focusAction("actionContiner")
 
                     })
                     .fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -126,7 +156,7 @@
 
                         $("#actionContiner").html(response);
 
-
+                        focusAction("actionContiner")
                     })
                     .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                         alert("Fail")
@@ -155,7 +185,7 @@
                                 .done(function (response) {
 
                                     $("#tableContiner").html(response);
-
+                                    focusAction("tableContiner")
 
                                     swal("Record Deleted Successfully", {
                                         icon: "success",
