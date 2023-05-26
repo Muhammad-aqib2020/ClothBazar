@@ -1,6 +1,4 @@
-﻿@{ 
-    ConfigurationsServices configurationsService = new ConfigurationsServices();
-}
+﻿
 <!DOCTYPE html>
 <html>
 <head>
@@ -179,7 +177,7 @@
                             </form>
                             <ul class="flat-social">
                            
-                                <li><a href="@configurationsService.GetConfig("FacebookUrl").Value"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="@ConfigurationsServices.Instance.GetConfig("FacebookUrl").Value"><i class="fa fa-facebook"></i></a></li>
                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                 <li><a href="#"><i class="fa fa-google"></i></a></li>
                                 <li><a href="#"><i class="fa fa-behance"></i></a></li>
@@ -230,8 +228,8 @@
                                 <a href="index.html"><img src="~/Content/images/logo@2x.png" alt="image" width="107" height="24"></a>
                             </div>
                             <ul class="flat-contact">
-                                <li class="address">@configurationsService.GetConfig("CompanyAdress").Value</li>
-                                <li class="phone">@configurationsService.GetConfig("CompanyPhone").Value</li>
+                                <li class="address">@ConfigurationsServices.Instance.GetConfig("CompanyAdress").Value</li>
+                                <li class="phone">@ConfigurationsServices.Instance.GetConfig("CompanyPhone").Value</li>
                                 <li class="email">infor.deercreative@gmail.com</li>
                             </ul><!-- /.flat-contact -->
                         </div><!-- /.widget -->

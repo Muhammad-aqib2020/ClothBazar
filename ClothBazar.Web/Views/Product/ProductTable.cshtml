@@ -20,10 +20,13 @@
                 <div class="form-group">
                     <label>Action</label>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4 pr-0">
                             <button class="btn btn-primary form-control" type="button" id="searchBtn">Search</button>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4 pr-0">
+                            <button class="btn btn-primary form-control" type="button" id="resetBtn">Reset</button>
+                        </div>
+                        <div class="col-md-4 pr-0">
                             <button class="btn btn-primary form-control" type="button" id="newBtn">New</button>
                         </div>
                     </div>
@@ -45,7 +48,9 @@
         <thead>
             <tr>
                 <td>Product Name</td>
+                <td>Description</td>
                 <td>Category</td>
+                <td>ImageURL</td>
                 <td>Price</td>
                 <td>Actions</td>
             </tr>
@@ -54,26 +59,33 @@
 
             @foreach (var product in Model.Products)
             {
-                <tr>
-                    <td>@product.Name</td>
-                    <td>
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Description</td>
+                <td>
 
-                        @if (product.Category != null)
-                        {
-                            <Text>@product.Category.Name</Text>
-                        }
-                        else
-                        {
-                            <Text>-</Text>
-                        }
-                    </td>
-                    <td>@product.Price</td>
-                    <td>
-                        <button class="editButton" data-id="@product.ID">Edit</button>
-                        <button class="deleteButton" data-id="@product.ID">Delete</button>
-                        <button class="add-to-cart" data-id="@product.ID">Add to Cart</button>
-                    </td>
-                </tr>
+                    @if (product.Category != null)
+                    {
+                        <Text>@product.Category.Name</Text>
+                    }
+                    else
+                    {
+                        <Text>-</Text>
+                    }
+                </td>
+                <td>
+                    <div class="thumb">
+                        <img id="categoryImage" src="@product.ImageURL" width="50" height="50" />
+
+                    </div>
+                </td>
+                <td>@product.Price</td>
+                <td>
+                    <button class="editButton" data-id="@product.ID">Edit</button>
+                    <button class="deleteButton" data-id="@product.ID">Delete</button>
+                    <button class="add-to-cart" data-id="@product.ID">Add to Cart</button>
+                </td>
+            </tr>
             }
 
 
@@ -97,12 +109,8 @@
     //New Button
     $(".pageButtons").click(function () {
 
-
-
-
-
         $.ajax({
-            url: '/Product/ProductTable',
+            url: '@Url.Action("ProductTable", "Product")',
             data: {
                 pageNo: $(this).attr("data-pageNo")
             }
@@ -111,8 +119,6 @@
             .done(function (response) {
 
                 $("#tableContiner").html(response);
-
-
 
             })
             .fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -125,7 +131,7 @@
         var searchValue = $("#searchTxt").val();
 
         $.ajax({
-            url: '/Product/ProductTable',
+            url: '@Url.Action("ProductTable", "Product")',
             data: {
                 search: searchValue
             }
@@ -133,7 +139,27 @@
             .done(function (response) {
 
                 $("#tableContiner").html(response);
+                focusAction("tableContiner")
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Fail")
+            });
+    });
 
+    //Reset Button
+    $("#resetBtn").click(function () {
+        var searchValue = ''
+
+        $.ajax({
+            url: '@Url.Action("ProductTable", "Product")',
+            data: {
+                search: searchValue
+            }
+        })
+            .done(function (response) {
+
+                $("#tableContiner").html(response);
+                focusAction("tableContiner")
             })
             .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("Fail")
@@ -142,13 +168,13 @@
     //New Button
     $("#newBtn").click(function () {
         $.ajax({
-            url: '/Product/Create',
+            url: '@Url.Action("create", "Product")',
 
         })
             .done(function (response) {
 
                 $("#actionContiner").html(response);
-
+                focusAction("actionContiner")
 
             })
             .fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -158,7 +184,7 @@
     //Edit Button
     $(".editButton").click(function () {
         $.ajax({
-            url: '/Product/Edit',
+            url: '@Url.Action("Edit", "Product")',
             data: {
                 ID: $(this).attr('data-id')
             }
@@ -166,7 +192,7 @@
             .done(function (response) {
 
                 $("#actionContiner").html(response);
-
+                focusAction("actionContiner")
 
             })
             .fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -188,7 +214,7 @@
 
                     $.ajax({
                         type: 'POST',
-                        url: '/Product/Delete',
+                        url: '@Url.Action("Delete", "Product")' ,
                         data: {
                             ID: $(this).attr('data-id')
                         }
@@ -196,7 +222,7 @@
                         .done(function (response) {
 
                             $("#tableContiner").html(response);
-
+                            focusAction("tableContiner")
 
                             swal("Record Deleted Successfully", {
                                 icon: "success",

@@ -14,11 +14,18 @@
     <label>Description</label>
     <input name="Description" value="@Model.Description" />
     <br />
+    <label>Image</label>
+    <div class="thumb">
+        <img id="categoryImage" src="@Model.ImageURL" />
+
+    </div>
+    <br />
     <label>Is Featured?</label>
     <input name="IsFeatured" type="radio" value="True" @truechecked /> True
     <input name="IsFeatured" type="radio" value="False" @falsechecked /> False
     <br />
     <button id="updateBtn" type="button">Submit</button>
+    <button class="btn btn-primary" id="cancelBtn" type="button">Cancel</button>
 </form>
 
 <script>
@@ -38,11 +45,18 @@
 
                 $("#tableContiner").html(response);
                 $("#actionContiner").html("");
+                focusAction("tableContiner");
+
             })
             .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("Fail")
             });
     });
 
+    $("#cancelBtn").click(function () {
 
+        $("#actionContiner").html("");
+
+        focusAction("tableContiner");
+    });
 </script>

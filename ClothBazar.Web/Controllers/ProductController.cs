@@ -37,23 +37,23 @@ namespace ClothBazar.Web.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            CategoriesServices categoriesServices = new CategoriesServices();
+       
 
-            var categories = categoriesServices.GetCategories();
+            var categories = CategoriesServices.Instance.GetCategories();
             return PartialView(categories);
         }
         [HttpPost]
         public ActionResult Create(NewCategoryViewModel model)
         {
-            CategoriesServices categoriesServices = new CategoriesServices();
+        
             var newProduct = new Product();
 
             newProduct.Name = model.Name;
             newProduct.Description = model.Description;
             newProduct.Price = model.Price;
           //  newProduct.CategoryID = model.CategoryID;
-            newProduct.Category = categoriesServices.GetCategory(model.CategoryID);
-
+            newProduct.Category = CategoriesServices.Instance.GetCategory(model.CategoryID);
+            newProduct.ImageURL = model.ImageURL;
             ProductsServices.Instance.SaveProduct(newProduct);
 
             return RedirectToAction("ProductTable");
@@ -68,15 +68,15 @@ namespace ClothBazar.Web.Controllers
         [HttpPost]
         public ActionResult Edit(NewCategoryViewModel model)
         {
-            CategoriesServices categoriesServices = new CategoriesServices();
+           
             var upProduct = new Product();
-
+            upProduct.ID = model.ID;
             upProduct.Name = model.Name;
             upProduct.Description = model.Description;
             upProduct.Price = model.Price;
-            //  newProduct.CategoryID = model.CategoryID;
-            upProduct.Category = categoriesServices.GetCategory(model.CategoryID);
-
+            upProduct.CategoryID = model.CategoryID;
+            upProduct.Category = CategoriesServices.Instance.GetCategory(model.CategoryID);
+            upProduct.ImageURL = model.ImageURL;
             ProductsServices.Instance.UpdateProduct(upProduct);
 
             return RedirectToAction("ProductTable");

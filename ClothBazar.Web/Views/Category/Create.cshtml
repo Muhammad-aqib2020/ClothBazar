@@ -29,7 +29,9 @@
         </div>
     </div>
     <button class="btn btn-primary" id="saveBtn" type="button">Submit</button>
+    <button class="btn btn-primary" id="cancelBtn" type="button">Cancel</button>
 </form>
+
 <script>
     $("#imageUpload").change(function () {
 
@@ -44,7 +46,7 @@
         }
         $.ajax({
             type: 'POST',
-            url: '/Shared/UploadImage',
+            url: '@Url.Action("UploadImage", "Shared")',
             data: formData,
             dataType: 'json',
             contentType: false,
@@ -64,13 +66,10 @@
                 alert("Fail")
             });
     });
-
-
-
-            //Save Button
+    //Save Button
         $("#saveBtn").click(function () {
 
-            console.log('id="saveBtn"')
+            
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("Create", "Category")',
@@ -88,5 +87,11 @@
                 });
             });
 
+
+    $("#cancelBtn").click(function () {
+       
+        $("#actionContiner").html("");
+        focusAction("tableContiner");
+      });
 
 </script>

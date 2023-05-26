@@ -63,6 +63,10 @@
     <Compile Include="Migrations\202305030539308_category.Designer.cs">
       <DependentUpon>202305030539308_category.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202305260636314_imageUrlinProducts.cs" />
+    <Compile Include="Migrations\202305260636314_imageUrlinProducts.Designer.cs">
+      <DependentUpon>202305260636314_imageUrlinProducts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -102,6 +106,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202305030539308_category.resx">
       <DependentUpon>202305030539308_category.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202305260636314_imageUrlinProducts.resx">
+      <DependentUpon>202305260636314_imageUrlinProducts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

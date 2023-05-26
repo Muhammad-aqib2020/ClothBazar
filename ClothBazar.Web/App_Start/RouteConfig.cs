@@ -20,8 +20,8 @@ namespace ClothBazar.Web
            );
 
             routes.MapRoute(
-             name: "CreatePage",
-             url: "CreatePage",
+             name: "Insert",
+             url: "Category/Insert",
              defaults: new { controller = "Category", action = "Create" }
          );
             routes.MapRoute(
@@ -31,32 +31,40 @@ namespace ClothBazar.Web
             );
 
             routes.MapRoute(
+             name: "UploadImageProduct",
+             url: "Product/UploadImage",
+             defaults: new { controller = "Shared", action = "UploadImage" }
+             );
+
+            routes.MapRoute(
             name: "DeleteCategory",
              url: "Category/remove",
              defaults: new { controller = "Category", action = "Delete" }
-                    );
-            //   routes.MapRoute(
-            //name: "CreateCategory",
-            //url: "Create/Category",
-            //defaults: new { controller = "Category", action = "Create"}
-            //);
+           );
 
-            //   routes.MapRoute(
-            //      name: "AllCategories",
-            //      url: "Category/",
-            //      defaults: new { controller = "Category", action = "CategoryTable" }
-            //  );
+            routes.MapRoute(
+                name:"AllProduct",
+                url:"Product/fetch",
+                defaults: new {controller="Product",action= "ProductTable" }
 
-            //routes.MapRoute(
-            //    name:"EditCategory",
-            //    url:"Update/Category",
-            //    defaults: new {controller="Category",action="Edit"}
-            //    );
-            //routes.MapRoute(
-            //    name: "DeleteCategory",
-            //    url: "Remove/Category",
-            //    defaults: new { controller = "Category",action= "Delete" }
-            //    );
+                );
+            routes.MapRoute(
+                name:"InsertProduct",
+                url:"Product/Insert",
+                defaults: new {controller="Product",action="Create"}
+                );
+            routes.MapRoute(
+                name: "EditProduct",
+                url: "Product/update",
+                defaults: new { controller = "Product", action = "Edit" }
+                );
+            routes.MapRoute(
+                name: "DeleteProduct",
+                url: "Product/remove",
+                defaults: new { controller = "Product", action = "Delete" }
+                );
+
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
