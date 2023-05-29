@@ -72,6 +72,7 @@ namespace ClothBazar.Web.Controllers
             var upProduct = new Product();
 
             upProduct.Name = model.Name;
+
             upProduct.Description = model.Description;
             upProduct.Price = model.Price;
             //  newProduct.CategoryID = model.CategoryID;
