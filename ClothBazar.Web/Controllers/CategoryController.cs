@@ -11,7 +11,7 @@ namespace ClothBazar.Web.Controllers
 {
     public class CategoryController : Controller
     {
- 
+    
         public ActionResult CategoryTable(string search, int? pageNo)
         {
             pageNo = pageNo.HasValue ? pageNo : 1;
@@ -19,7 +19,7 @@ namespace ClothBazar.Web.Controllers
             NewCategoryViewModel NMC = new NewCategoryViewModel();
        
             //ProductsServices productservice = new ProductsServices();
-           
+        
             var productdata = ProductsServices.Instance.GetProducts(pageNo.Value);
             var categorydata = CategoriesServices.Instance.GetCategories();
 
@@ -34,7 +34,6 @@ namespace ClothBazar.Web.Controllers
                                 ID = c.ID,
                                 Name = c.Name,
                                 Description = c.Description,
-                                ImageURL = c.ImageURL,
                                 Price = data == null ? 0 : data.Price,
                             }).ToList();
 
@@ -74,7 +73,7 @@ namespace ClothBazar.Web.Controllers
        [HttpGet]
         public ActionResult Create()
         {
-          
+       
 
             var categories = CategoriesServices.Instance.GetCategories();
             return PartialView(categories);
