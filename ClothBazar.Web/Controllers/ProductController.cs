@@ -68,15 +68,16 @@ namespace ClothBazar.Web.Controllers
         [HttpPost]
         public ActionResult Edit(NewCategoryViewModel model)
         {
-          
-            var upProduct = new Product();
 
+            var upProduct = new Product();
+            upProduct.ID = model.ID;
             upProduct.Name = model.Name;
+
             upProduct.Description = model.Description;
             upProduct.Price = model.Price;
-            //  newProduct.CategoryID = model.CategoryID;
+            upProduct.CategoryID = model.CategoryID;
             upProduct.Category = CategoriesServices.Instance.GetCategory(model.CategoryID);
-
+            upProduct.ImageURL = model.ImageURL;
             ProductsServices.Instance.UpdateProduct(upProduct);
 
             return RedirectToAction("ProductTable");
