@@ -13,5 +13,7 @@ namespace ClothBazar.Web.ViewModels
         public decimal Price { get; set; }
         public string ImageURL { get; set; }
         public bool IsFeatured { get; set; }
+
+        
     }
 }

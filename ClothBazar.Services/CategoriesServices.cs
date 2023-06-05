@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 
 namespace ClothBazar.Services
@@ -34,15 +35,59 @@ namespace ClothBazar.Services
                 return context.categories.Find(ID);
             }
         }
-
-        public List<Category> GetCategories()
+        public int GetCategoriesCount(string search)
         {
-            
-            using (var context=new CBContext())
+
+            using (var context = new CBContext())
             {
-                return context.categories.ToList();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    return context.categories.Where(p => p.Name != null && p.Name.ToLower()
+                   .Contains(search.ToLower())).Count();
+                 
+
+                }
+                else
+                {
+                    return context.categories.Count();
+                }
             }
         }
+        public List<Category> GetCategories(string search,int pageNo)
+        {
+            //int pageSize = int.Parse(ConfigurationsServices.Instance.GetConfig("ListingPageSize").Value);
+            int pageSize = 5;
+            using (var context=new CBContext())
+            {
+                if (!string.IsNullOrEmpty(search))
+                {
+                    return context.categories.Where(p => p.Name != null && p.Name.ToLower()
+                    .Contains(search.ToLower()))
+                    .OrderBy(x => x.ID)
+                    .Skip((pageNo - 1) * pageSize)
+                    .Take(pageSize)
+                    .Include(x => x.Products)
+                    .ToList();
+                 
+                
+                }
+                else
+                {
+                    return context.categories.OrderBy(x => x.ID).Skip((pageNo - 1) * pageSize).Take(pageSize).Include(x => x.Products).ToList();
+                }
+          
+            }
+        }
+        public List<Category> GetAllCategories()
+        {
+            //int pageSize = int.Parse(ConfigurationsServices.Instance.GetConfig("ListingPageSize").Value);
+            using (var context = new CBContext())
+            {
+              
+                    return context.categories.Include(x => x.Products).ToList();
+            }
+        }
+
         public List<Category> GetFeaturedCategories()
         {
             using (var context = new CBContext())
