@@ -39,7 +39,7 @@ namespace ClothBazar.Web.Controllers
         {
           
 
-            var categories = CategoriesServices.Instance.GetCategories();
+            var categories = CategoriesServices.Instance.GetAllCategories();
             return PartialView(categories);
         }
         [HttpPost]

@@ -43,14 +43,15 @@ namespace ClothBazar.Services
         }
         public List<Product> GetProducts(int pageNo)
         {
-            int pageSize = 5;
+            int pageSize = 5;// int.Parse(ConfigurationsServices.Instance.GetConfig("ListingPageSize").Value);
 
-            //var context = new CBContext();
-            //return context.Products.OrderBy(x=>x.ID).Skip((pageNo-1)* pageSize).Take(pageSize).ToList();
+            //  var context = new CBContext();
+
 
             using (var context = new CBContext())
             {
-                return context.Products.Include(x=>x.Category).ToList();
+                return context.Products.OrderBy(x => x.ID).Skip((pageNo - 1) * pageSize).Take(pageSize).Include(x => x.Category).ToList();
+               //return context.Products.Include(x => x.Category).ToList();
             }
         }
 

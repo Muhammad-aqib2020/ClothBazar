@@ -14,6 +14,10 @@ namespace ClothBazar.Database
         {
 
         }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Category>().Property(p => p.Name).IsRequired().HasMaxLength(50);
+        }
         public DbSet<Category> categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Config> Configurations { get; set; }

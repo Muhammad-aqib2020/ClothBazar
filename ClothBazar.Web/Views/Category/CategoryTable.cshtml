@@ -1,82 +1,65 @@
-﻿@model  List<ClothBazar.Web.ViewModels.CategoryViewModel>
+﻿@model  ClothBazar.Web.ViewModels.NewCategoryViewModel
 @{
     ViewBag.Title = "CategoryTable";
 }
 
-<div>
-    <form method="post" action="/Category/CategoryTable">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="form-group">
-
-                    <label>Search</label>
-                    <input class="form-control" id="searchTxt" name="Search" />
-
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Action</label>
-                    <div class="row">
-                        <div class="col-md-4 pr-0">
-                            <button class="btn btn-primary form-control" type="button" id="searchBtn">Search</button>
-                        </div>
-                        <div class="col-md-4 pr-0">
-                            <button class="btn btn-primary form-control" type="button" id="resetBtn">Reset</button>
-                        </div>
-                        <div class="col-md-4 pr-0">
-                            <button class="btn btn-primary form-control" type="button" id="newBtn">New</button>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </form>
-
-</div>
 
 <h2>CategoryTable</h2>
 
 
 <div id="tableContiner">
 
+    <div>
+        <form method="post" action="/Category/CategoryTable">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+
+                        <label>Search</label>
+                        <input class="form-control" id="searchTxt" name="Search"  value="@Model.Searchterm"/>
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Action</label>
+                        <div class="row">
+                            <div class="col-md-4 pr-0">
+                                <button class="btn btn-primary form-control" type="button" id="searchBtn">Search</button>
+                            </div>
+                            <div class="col-md-4 pr-0">
+                                <button class="btn btn-primary form-control" type="button" id="resetBtn">Reset</button>
+                            </div>
+                            <div class="col-md-4 pr-0">
+                                <button class="btn btn-primary form-control" type="button" id="newBtn">New</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
 
     <table class="table table-striped">
         <thead>
             <tr>
                 <td>Category Name</td>
-                <td>Description</td>
-                <td>Price</td>
-                <td>Image</td>
+                <td>Products</td>
+               
                 <td>Actions</td>
             </tr>
         </thead>
         <tbody>
 
-            @foreach (var product in Model)
+            @foreach (var product in Model.categories)
             {
                 <tr>
                     <td>@product.Name</td>
-                    <td>
 
-                        @if (product.Description != null)
-                        {
-                            <Text>@product.Description</Text>
-                        }
-                        else
-                        {
-                            <Text>-</Text>
-                        }
-                    </td>
-                    <td>
-                        <div class="thumb">
-                            <img id="categoryImage" src="@product.ImageURL" width="50" height="50"/>
-
-                        </div>
-                    </td>
-                    <td>@product.Price</td>
+                    <td>@product.Products.Count</td>
                     <td>
                         <button class="editButton" data-id="@product.ID">Edit</button>
                         <button class="deleteButton" data-id="@product.ID">Delete</button>
@@ -85,10 +68,60 @@
             }
         </tbody>
     </table>
+    <div>
+        @if (Model.Pager != null)
+        {
+            if (Model.Pager.CurrentPage > 1)
+            {
+                <button class="pageButtons" data-pageno="1">First</button>
+                <button class="pageButtons" data-pageno="@(Model.Pager.CurrentPage-1)">Previous</button>
+            }
+
+            for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
+            {
+                string activeClass = Model.Pager.CurrentPage == page ? "active bg-info" : string.Empty;
+
+                <button class="@activeClass pageButtons" data-pageno="@page">@page</button>
+            }
+
+            if (Model.Pager.CurrentPage < Model.Pager.EndPage)
+            {
+                <button class="pageButtons" data-pageno="@(Model.Pager.CurrentPage+1)">Next</button>
+                <button class="pageButtons" data-pageno="@(Model.Pager.EndPage)">Last</button>
+            }
+
+        }
+
+    </div>
 </div>
 
 
 <script>
+    //let table = new DataTable('#ProductsTable');
+    //New Button
+    $(".pageButtons").click(function () {
+
+        var searchValue = $("#searchTxt").val();
+
+        $.ajax({
+            url: '@Url.Action("CategoryTable", "Category")',
+            data: {
+                pageNo: $(this).attr("data-pageNo"),
+                search: '@Model.Searchterm'
+
+            }
+
+        })
+            .done(function (response) {
+
+                $("#tableContiner").html(response);
+
+              //  document.getElementById('searchTxt').value = searchValue;
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("Fail")
+            });
+    });
             //Search Button
             $("#searchBtn").click(function () {
                 var searchValue = $("#searchTxt").val();
@@ -97,12 +130,12 @@
                     url:'@Url.Action("CategoryTable", "Category")', //'/Category/CategoryTable',
                     data: {
                         search: searchValue
-                    }
+                            }
                 })
                     .done(function (response) {
 
                         $("#tableContiner").html(response);
-
+                    //    document.getElementById('searchTxt').value = searchValue;
                     })
                     .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                         alert("Fail")

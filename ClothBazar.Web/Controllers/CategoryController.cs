@@ -14,58 +14,33 @@ namespace ClothBazar.Web.Controllers
     
         public ActionResult CategoryTable(string search, int? pageNo)
         {
-            pageNo = pageNo.HasValue ? pageNo : 1;
+            CategoryViewModel model = new CategoryViewModel();
 
+            Category category = new Category();
             NewCategoryViewModel NMC = new NewCategoryViewModel();
-       
-            //ProductsServices productservice = new ProductsServices();
-        
-            var productdata = ProductsServices.Instance.GetProducts(pageNo.Value);
-            var categorydata = CategoriesServices.Instance.GetCategories();
-
-
-
-            var category = (from c in categorydata
-                            join p in productdata
-                    on c.ID equals p.CategoryID into ps
-                            from data in ps.DefaultIfEmpty()
-                            select new CategoryViewModel
-                            {
-                                ID = c.ID,
-                                Name = c.Name,
-                                Description = c.Description,
-                                Price = data == null ? 0 : data.Price,
-                            }).ToList();
-
-
-
-
-
-            if (!string.IsNullOrEmpty(search))
+             pageNo = pageNo.HasValue ? pageNo.Value > 0 ? pageNo.Value : 1 : 1;
+            int pageSize = 5;
+            NMC.Searchterm = search;
+            NMC.products = ProductsServices.Instance.GetProducts(pageNo.Value);
+            var totalrecord = CategoriesServices.Instance.GetCategoriesCount(search);
+            NMC.categories = CategoriesServices.Instance.GetCategories( search, pageNo.Value);
+            
+            if (NMC.categories != null)
             {
-                categorydata = categorydata.Where(p => p.Name != null && p.Name.Contains(search)).ToList();
+             
+                NMC.Pager = new Pager(totalrecord, pageNo);
 
-                category = (from p in productdata
-                            join c in categorydata
-                               on p.CategoryID equals c.ID into ps
-                            from c in ps.DefaultIfEmpty()
-                            select new CategoryViewModel
-                            {
-                                ID = c.ID,
-                                Name = c.Name,
-                                Description = c.Description,
-                                Price = p.Price,
-                            }).ToList();
-
-
+                return PartialView(NMC);
             }
-            NMC.CategoryViewModels = category.ToList();
-            return PartialView(NMC.CategoryViewModels);
+            else
+            {
+                return HttpNotFound();
+            }
         }
         [HttpGet]
         public ActionResult Index()
         {
-          var categories= CategoriesServices.Instance.GetCategories();
+          var categories= CategoriesServices.Instance.GetAllCategories();
 
             return View(categories);
         }
@@ -75,7 +50,7 @@ namespace ClothBazar.Web.Controllers
         {
        
 
-            var categories = CategoriesServices.Instance.GetCategories();
+            var categories = CategoriesServices.Instance.GetAllCategories();
             return PartialView(categories);
         }
 
@@ -83,17 +58,25 @@ namespace ClothBazar.Web.Controllers
         [HttpPost]
         public ActionResult Create(Category category)     
         {
-            var newCategory = new Category();
+            if (ModelState.IsValid)
+            {
+                var newCategory = new Category();
 
-            newCategory.Name = category.Name;
-            newCategory.Description = category.Description;
-            newCategory.ImageURL = category.ImageURL;
-            newCategory.IsFeatured = category.IsFeatured;
+                newCategory.Name = category.Name;
+                newCategory.Description = category.Description;
+                newCategory.ImageURL = category.ImageURL;
+                newCategory.IsFeatured = category.IsFeatured;
 
-            CategoriesServices.Instance.SaveCategory(newCategory);
+                CategoriesServices.Instance.SaveCategory(newCategory);
 
- 
-            return RedirectToAction("CategoryTable");
+
+                return RedirectToAction("CategoryTable");
+            }
+            else
+            {
+                return new HttpStatusCodeResult(500);
+            }
+            
         }
         //[HttpPost]
         //public ActionResult Create(NewCategoryViewModel model)
