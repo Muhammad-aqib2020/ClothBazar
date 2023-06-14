@@ -54,7 +54,42 @@ namespace ClothBazar.Services
                //return context.Products.Include(x => x.Category).ToList();
             }
         }
+        public List<Product> GetProducts(int pageNo,int pagesize)
+        {
+          //  int pageSize = 5; int.Parse(ConfigurationsServices.Instance.GetConfig("ListingPageSize").Value);
 
+            //  var context = new CBContext();
+
+
+            using (var context = new CBContext())
+            {
+                return context.Products.OrderByDescending(x => x.ID).Skip((pageNo - 1) * pagesize).Take(pagesize).Include(x => x.Category).ToList();
+                //return context.Products.Include(x => x.Category).ToList();
+            }
+        }
+        public List<Product> GetProductsbyCategory(int categoryId,int pagesize)
+        {
+            //  int pageSize = 5; int.Parse(ConfigurationsServices.Instance.GetConfig("ListingPageSize").Value);
+
+            //  var context = new CBContext();
+
+
+            using (var context = new CBContext())
+            {
+                return context.Products.Where(x=>x.Category.ID== categoryId).OrderByDescending(x => x.ID).Take(pagesize).Include(x => x.Category).ToList();
+                //return context.Products.Include(x => x.Category).ToList();
+            }
+        }
+        public List<Product> GetLatestProducts(int numberofproducta)
+        {
+           
+
+            using (var context = new CBContext())
+            {
+                return context.Products.OrderByDescending(x => x.ID).Take(numberofproducta).Include(x => x.Category).ToList();
+                //return context.Products.Include(x => x.Category).ToList();
+            }
+        }
         public void SaveProduct(Product product)
         {
             using (var context = new CBContext())
