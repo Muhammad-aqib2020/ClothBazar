@@ -51,7 +51,8 @@ namespace ClothBazar.Web.Controllers
             newProduct.Name = model.Name;
             newProduct.Description = model.Description;
             newProduct.Price = model.Price;
-          //  newProduct.CategoryID = model.CategoryID;
+            newProduct.ImageURL = model.ImageURL;
+            newProduct.CategoryID = model.CategoryID;
             newProduct.Category = CategoriesServices.Instance.GetCategory(model.CategoryID);
 
             ProductsServices.Instance.SaveProduct(newProduct);
@@ -81,6 +82,15 @@ namespace ClothBazar.Web.Controllers
             ProductsServices.Instance.UpdateProduct(upProduct);
 
             return RedirectToAction("ProductTable");
+        }
+        [HttpGet]
+        public ActionResult Details(int id)
+        {
+            ProductViewModel model = new ProductViewModel();
+            model.product = ProductsServices.Instance.GetProduct(id);
+
+             return View(model);
+
         }
         [HttpPost]
         public ActionResult Delete(int ID)
