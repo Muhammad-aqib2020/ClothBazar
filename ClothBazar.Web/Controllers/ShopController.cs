@@ -35,5 +35,18 @@ namespace ClothBazar.Web.Controllers
 
             return View(model);
         }
+
+        public ActionResult Index(string searchTerm,int? minimumPrice,int? maximumPrice,int? CategoryID,int? sortBy)
+        {
+            ShopViewModel model = new ShopViewModel();
+
+            model.FeaturedCategory = CategoriesServices.Instance.GetFeaturedCategories();
+            model.MaximumPrice = ProductsServices.Instance.GetMaximumPrice();
+
+            model.Products = ProductsServices.Instance.searchProducts(searchTerm, minimumPrice, maximumPrice, CategoryID, sortBy);
+            model.Sortby = sortBy;
+
+            return View(model);
+        }
     }
 }
